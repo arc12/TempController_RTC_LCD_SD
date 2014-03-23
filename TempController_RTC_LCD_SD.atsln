@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "TempController_RTC_LCD_SD", "TempController_RTC_LCD_SD.cppproj", "{AD7C1C65-91EB-4219-9C2E-429256FE6D50}"
+	ProjectSection(ProjectDependencies) = postProject
+		{32943AF2-2A5C-4591-A062-B35D5B167A16} = {32943AF2-2A5C-4591-A062-B35D5B167A16}
+	EndProjectSection
+EndProject
+Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "I2CUtils", "..\..\Arduino Libraries\I2CUtils\I2CUtils.cppproj", "{E2C740A9-CC8A-4AD0-93AE-6964FBCE14B5}"
+EndProject
+Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "MCP7940N", "..\..\Arduino Libraries\MCP7940N\MCP7940N.cppproj", "{CF35B225-A705-467E-B8DC-C8172192EF25}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E2C740A9-CC8A-4AD0-93AE-6964FBCE14B5} = {E2C740A9-CC8A-4AD0-93AE-6964FBCE14B5}
+	EndProjectSection
+EndProject
+Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "EEPROMUtils", "..\..\Arduino Libraries\EEPROMUtils\EEPROMUtils.cppproj", "{32943AF2-2A5C-4591-A062-B35D5B167A16}"
+EndProject
+Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "SdFat", "..\..\Arduino Libraries 3rd Party\SdFat\SdFat.cppproj", "{48772F27-1224-45DC-AEE2-29D897735A21}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AD7C1C65-91EB-4219-9C2E-429256FE6D50}.Debug|AVR.ActiveCfg = Debug|AVR
+		{AD7C1C65-91EB-4219-9C2E-429256FE6D50}.Debug|AVR.Build.0 = Debug|AVR
+		{AD7C1C65-91EB-4219-9C2E-429256FE6D50}.Release|AVR.ActiveCfg = Release|AVR
+		{AD7C1C65-91EB-4219-9C2E-429256FE6D50}.Release|AVR.Build.0 = Release|AVR
+		{E2C740A9-CC8A-4AD0-93AE-6964FBCE14B5}.Debug|AVR.ActiveCfg = Debug|AVR
+		{E2C740A9-CC8A-4AD0-93AE-6964FBCE14B5}.Debug|AVR.Build.0 = Debug|AVR
+		{E2C740A9-CC8A-4AD0-93AE-6964FBCE14B5}.Release|AVR.ActiveCfg = Release|AVR
+		{E2C740A9-CC8A-4AD0-93AE-6964FBCE14B5}.Release|AVR.Build.0 = Release|AVR
+		{CF35B225-A705-467E-B8DC-C8172192EF25}.Debug|AVR.ActiveCfg = Debug|AVR
+		{CF35B225-A705-467E-B8DC-C8172192EF25}.Debug|AVR.Build.0 = Debug|AVR
+		{CF35B225-A705-467E-B8DC-C8172192EF25}.Release|AVR.ActiveCfg = Release|AVR
+		{CF35B225-A705-467E-B8DC-C8172192EF25}.Release|AVR.Build.0 = Release|AVR
+		{32943AF2-2A5C-4591-A062-B35D5B167A16}.Debug|AVR.ActiveCfg = Debug|AVR
+		{32943AF2-2A5C-4591-A062-B35D5B167A16}.Debug|AVR.Build.0 = Debug|AVR
+		{32943AF2-2A5C-4591-A062-B35D5B167A16}.Release|AVR.ActiveCfg = Release|AVR
+		{32943AF2-2A5C-4591-A062-B35D5B167A16}.Release|AVR.Build.0 = Release|AVR
+		{48772F27-1224-45DC-AEE2-29D897735A21}.Debug|AVR.ActiveCfg = Debug|AVR
+		{48772F27-1224-45DC-AEE2-29D897735A21}.Debug|AVR.Build.0 = Debug|AVR
+		{48772F27-1224-45DC-AEE2-29D897735A21}.Release|AVR.ActiveCfg = Release|AVR
+		{48772F27-1224-45DC-AEE2-29D897735A21}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
