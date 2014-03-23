@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Adam Cooper, based heavily on the work of Elco Jacobs.
+ * Copyright 2014 Adam Cooper, based heavily on the work of Elco Jacobs.
  * See http://www.elcojacobs.com/easy-to-use-atmel-studio-project-for-arduino-and-programming-the-arduino-from-python/
  *
  * This is free software: you can redistribute it and/or modify
@@ -7,7 +7,7 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * ShiftPWM is distributed in the hope that it will be useful,
+ * Distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
