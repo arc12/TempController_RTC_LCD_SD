@@ -16349,8 +16349,8 @@ We've spent an enormous amount of time creating and checking these footprints an
 <wire x1="-2.54" y1="-1.27" x2="2.54" y2="-1.27" width="0.127" layer="21"/>
 <wire x1="2.54" y1="-1.27" x2="2.54" y2="1.27" width="0.127" layer="21"/>
 <wire x1="2.54" y1="1.27" x2="-2.54" y2="1.27" width="0.127" layer="21"/>
-<text x="-3.175" y="-3.175" size="1.27" layer="21">&gt;VALUE</text>
-<text x="-3.175" y="1.905" size="1.27" layer="21">&gt;NAME</text>
+<text x="-3.175" y="-3.175" size="1.27" layer="27">&gt;VALUE</text>
+<text x="-3.175" y="1.905" size="1.27" layer="25">&gt;NAME</text>
 </package>
 <package name="TO127P254X495-3">
 <pad name="1" x="-2.54" y="-2.54" drill="0.9906"/>
@@ -20137,7 +20137,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="LDO1" library="Astronomical Clocks" deviceset="XC6204/5" device="" value="XC6204B 3V3"/>
 <part name="D2" library="Astronomical Clocks" deviceset="DIODE-SCHOTTKY" device="DO-41" value="SR150"/>
 <part name="J1" library="Astronomical Clocks" deviceset="POWER_JACK" device="SLT" value="PWR IN"/>
-<part name="SJ1" library="Astronomical Clocks" deviceset="SOLDERJUMPER" device="NO" value="Bypass LDO for 3V3 supp"/>
+<part name="SJ1" library="Astronomical Clocks" deviceset="SOLDERJUMPER" device="NO" value="Bypass LDOs"/>
 <part name="U$2" library="Logging Controller" deviceset="MICROSD-HRS_DM3D" device=""/>
 <part name="U2" library="Logging Controller" deviceset="LCD-16X2" device="NOSILK" value="LCD-1602 3V3"/>
 <part name="SV2" library="Logging Controller" deviceset="MA03-1" device="" value="DS18B20"/>
@@ -20145,7 +20145,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="LED2" library="Astronomical Clocks" deviceset="LED" device="5MM" value="SSR-B"/>
 <part name="S2" library="Logging Controller" deviceset="SWITCH-MOMENTARY-2" device="OFF_BOARD_SPST" value="INPUT"/>
 <part name="S3" library="Logging Controller" deviceset="SWITCH-MOMENTARY-2" device="OFF_BOARD_SPST" value="BACKLIGHT"/>
-<part name="U3" library="Logging Controller" deviceset="MCP1700-3302E/TO" device=""/>
+<part name="LDO2" library="Logging Controller" deviceset="MCP1700-3302E/TO" device=""/>
 <part name="R9" library="Astronomical Clocks" deviceset="R-EU_" device="0204/7**" value="4k7"/>
 <part name="PAD1" library="Logging Controller" deviceset="WIREPAD" device="2,54/1,1" value="VIN"/>
 <part name="PAD2" library="Logging Controller" deviceset="WIREPAD" device="2,54/1,1" value="GND"/>
@@ -20315,7 +20315,7 @@ or Bluetooth</text>
 <attribute name="NAME" x="199.39" y="142.24" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="201.93" y="139.7" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="U3" gate="A" x="24.13" y="167.64" smashed="yes">
+<instance part="LDO2" gate="A" x="24.13" y="167.64" smashed="yes">
 <attribute name="NAME" x="19.431" y="171.4246" size="2.0828" layer="95" ratio="10" rot="SR0"/>
 <attribute name="VALUE" x="11.4046" y="158.9278" size="2.0828" layer="96" ratio="10" rot="SR0"/>
 </instance>
@@ -20494,7 +20494,7 @@ or Bluetooth</text>
 <pinref part="SUPPLY6" gate="1" pin="VCC"/>
 <wire x1="50.8" y1="156.21" x2="50.8" y2="149.86" width="0.1524" layer="91"/>
 <junction x="50.8" y="149.86"/>
-<pinref part="U3" gate="A" pin="VOUT"/>
+<pinref part="LDO2" gate="A" pin="VOUT"/>
 <wire x1="41.91" y1="165.1" x2="43.18" y2="165.1" width="0.1524" layer="91"/>
 <wire x1="43.18" y1="165.1" x2="43.18" y2="149.86" width="0.1524" layer="91"/>
 </segment>
@@ -20650,7 +20650,7 @@ or Bluetooth</text>
 <wire x1="5.08" y1="124.46" x2="0" y2="124.46" width="0.1524" layer="91"/>
 <wire x1="-10.16" y1="124.46" x2="-10.16" y2="121.92" width="0.1524" layer="91"/>
 <wire x1="-10.16" y1="121.92" x2="-10.16" y2="114.3" width="0.1524" layer="91"/>
-<pinref part="U3" gate="A" pin="GND"/>
+<pinref part="LDO2" gate="A" pin="GND"/>
 <wire x1="6.35" y1="162.56" x2="-7.62" y2="162.56" width="0.1524" layer="91"/>
 <wire x1="-7.62" y1="162.56" x2="-7.62" y2="146.05" width="0.1524" layer="91"/>
 <junction x="-7.62" y="114.3"/>
@@ -20828,7 +20828,7 @@ or Bluetooth</text>
 <pinref part="SJ1" gate="1" pin="1"/>
 <wire x1="8.89" y1="143.51" x2="15.24" y2="143.51" width="0.1524" layer="91"/>
 <wire x1="5.08" y1="134.62" x2="5.08" y2="165.1" width="0.1524" layer="91"/>
-<pinref part="U3" gate="A" pin="VIN"/>
+<pinref part="LDO2" gate="A" pin="VIN"/>
 <wire x1="5.08" y1="165.1" x2="6.35" y2="165.1" width="0.1524" layer="91"/>
 <pinref part="C11" gate="G$1" pin="+"/>
 <wire x1="5.08" y1="133.35" x2="5.08" y2="134.62" width="0.1524" layer="91"/>
