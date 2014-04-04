@@ -308,7 +308,7 @@ void loop(){
 				readRTC();
 				readSensors();
 			}
-			//check whether the output should change
+			//check whether the output should change, including over-shoot alert
 			if(needControl){
 				lastControlAt = millis();
 				controlOutputs();
@@ -317,6 +317,30 @@ void loop(){
 			if(needLog){
 				lastLogAt = millis();
 				logData();
+			}
+			//check if button held to request all sensor temperature values are cycled
+			while(!digitalRead(pushSwitchPin)){
+				if(lcdPresent){
+					lcd.clear();
+					char sT[6];
+					//loop over all stored sensors and check which were found
+					for(uint8_t i=0;i<numStoredSensorIds;i++){
+						if(connectedSensorIds[i][0] != 0xFF){
+							//if sensor connected then emit the ID on the first row of the LCD
+							// followed by the temp on the second row
+							lcd.setCursor(0, 0);//row=0 col=0
+							for(uint8_t j=0; j<8; j++){
+								lcd.print(connectedSensorIds[i][j], HEX);
+							}							
+							lcd.setCursor(0, 1);//row=1 col=0
+							lcd.print("Temp=");
+							stringT(T[i],sT);
+							lcd.print(sT);
+							delay(1000);
+						}
+					}		
+					lcd.clear();
+				}				
 			}
 			//update LCD for run mode
 			if(  lcdPresent){
@@ -345,7 +369,8 @@ void loop(){
 				lcd.setCursor(0, 0);//row=0 col=0
 				lcd.print("No sensors!");
 			}
-		}
+			
+		}//end if(runmode)
 	}
 	else{
 		//check for commands from Serial and execute them accordingly
@@ -662,12 +687,15 @@ void logData(){
 
 
 //determine whether the outputs should change
-//only outA is controlled at present
+//only outA is controlled at present, outB is used to alert over-shoot
 void controlOutputs(){
 	float Tc = T[controlSensorIndex];
+	//control
 	if(Tc<Tmin) outA=true;
 	if(Tc>=(Tmin+Thys)) outA=false;
 	digitalWrite(outAPin, outA?HIGH:LOW);
+	//alert
+	digitalWrite(outBPin, Tc>(Tmin+Thys));
 }
 
 //reads date and time into global variables
