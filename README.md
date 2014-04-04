@@ -4,4 +4,3 @@ Intended for compilation in Atmel Studio and deployment on a custom ATMega328 ba
 
 Various library dependencies not in github yet (will be separate repos). See *.atsln
 
-Schematic and PCB layouts not in github yet.
