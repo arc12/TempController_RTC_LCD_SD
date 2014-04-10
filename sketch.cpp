@@ -72,8 +72,17 @@ void sdConnect();
 
 /* Below this point, should be what you need for an Arduino IDE sketch (+ the necessary library includes) */
 
+//these lines are to capture MCUSR as intercepted by optiboot before it resets it.
+uint8_t resetFlags __attribute__ ((section(".noinit")));
+void resetFlagsInit(void) __attribute__ ((naked)) __attribute__ ((section (".init0")));
+void resetFlagsInit(void)
+{
+	// save the reset flags passed from the bootloader
+	__asm__ __volatile__ ("mov %0, r2\n" : "=r" (resetFlags) :);
+}
 
-#define DEBUG //comment out to suppress trace output to Serial
+//#define DEBUG //comment out to suppress trace output to Serial
+#define WATCHDOG //comment out to suppress use of the watchdog timer, which will cause a reset in the event of a hang (which seems to be associated with powering from a wall wart)
 
 /* Pin definition */
 // I2C is (hardware) fixed as A4=SDA, A5=SCL
@@ -100,7 +109,7 @@ const int sensorPin = 5;   //a 4.7k pull-up resistor is necessary
 #define RUN_MODE HIGH// for reading modeSwitch
 
 #define MAX_1WIRE_SENSORS 3 //max number of 1-wire sensors. Large values may exceed available memory!!!
-#define MAX_FIELD_LENGTH 23+6*MAX_1WIRE_SENSORS //max length of a record in logged data, YYYY-MM-DD,HH:MM:SS,A,B{,TTT.T}*MAX_1WIRE_SENSORS
+#define MAX_FIELD_LENGTH 26+6*MAX_1WIRE_SENSORS //max length of a record in logged data, YYYY-MM-DD,HH:MM:SS,A,B,status{,TTT.T}*MAX_1WIRE_SENSORS
 
 /* used to decode commands into an integer */
 #define CMD_ECHO 0 //echo test
@@ -156,6 +165,9 @@ long lastControlAt = 0;//store value of millis() when control conditions were la
 //outputs are turned off initially
 boolean outA=false;
 boolean outB= false;
+//flags logged to last column
+//typically the value of bits 3-0 of the MCU status register after startup, when bits 7-4 are set to 1111
+uint8_t status =0;
 
 // default values, may be changed according to EEPROM or commands via USB
 char logFileName[13] = "log.csv";//as LOGN
@@ -165,6 +177,24 @@ float Thys = 1.0;//as THYS
 unsigned long controlInterval = 30;//as OUTI
 
 void setup(){
+	//set the status on a reset. Unfortunatly, optiboot boot loader resets MCUSR so this will always set 
+	// status to 0xF0, whatever the reset cause but the older arduino bootloader preserves it.
+	// A later version of optiboot is believed to pass the value of MCUSR in a register. This is coded for but
+	// has not been tested (optiboot version not high enough).
+	// Alternatively, just program over the bootloader!
+	status=0xF0 | resetFlags;
+	
+	//enable the watchdog timer with an 8s timeout
+	#ifdef WATCHDOG
+	cli();//disable interrupts
+	__asm__ __volatile__ ("wdr");//reset watchdog timer
+	/* Start timed equence */
+	WDTCSR |= (1<<WDCE) | (1<<WDE);
+	/* Set new prescaler(time-out) value = 1024K cycles (~8 s) */
+	WDTCSR = (1<<WDE) | (1<<WDP3) | (1<<WDP0);
+	sei();// enable_interrupt
+	#endif
+	
 	//the min param lengths
 	paramLength[CMD_ECHO]=0;
 	paramLength[CMD_GETD]=0;
@@ -189,7 +219,7 @@ void setup(){
 	pinMode(outBPin, OUTPUT);
 	pinMode(10, OUTPUT); //SPI Slave-Select
 	
-	// set up the SD card switch as an interrupt. Pin2 is interrupt 0. Only trigger on
+	// set up the SD card switch as an interrupt. Pin2 is interrupt 0. Only trigger on edge
 	pinMode(sdSwitch,INPUT_PULLUP);
 	attachInterrupt(0, sdConnect, FALLING);
 	
@@ -208,6 +238,12 @@ void setup(){
 		// Print a message to the LCD.
 		lcd.print("Starting!");
 	}
+	
+	//indicate startup to the user via the OUTB LED
+	digitalWrite(outBPin, HIGH);
+	delay(500);
+	digitalWrite(outBPin, LOW);
+	
 	// try to initialise SD card.
 	// alt use sd.begin(chipSelect, SPI_HALF_SPEED)
 	hasSD=sd.begin();//was SD.begin(10)
@@ -217,10 +253,10 @@ void setup(){
 	}
 	
 	//if pushbutton is held (active low) on startup then clear stored temp sensor IDs prior to detecting attached sensors
-	if(!digitalRead(pushSwitchPin)){
-		EEPROMUtils::clearBlock(EEPROM_1WIRE_BASE, MAX_1WIRE_SENSORS*8);
-		while(digitalRead(pushSwitchPin));//wait for release since the button is used in set mode inside loop()
-	}
+	//if(!digitalRead(pushSwitchPin)){
+		//EEPROMUtils::clearBlock(EEPROM_1WIRE_BASE, MAX_1WIRE_SENSORS*8);
+		//while(digitalRead(pushSwitchPin));//wait for release since the button is used in set mode inside loop()
+	//}
 
 	detectAttachedSensors();
 
@@ -263,6 +299,11 @@ void setup(){
 1. changing settings using Serial/USB or manual button-pressing (for Tmin) will not save the values to EEPROM
 until re-entering run mode. */
 void loop(){
+	
+	#ifdef WATCHDOG
+	 __asm__ __volatile__ ("wdr");//reset watchdog timer
+	#endif
+	
 	//is an SD card re-initialise required? This will be the case if an interrupt was triggered by a SD card hot insertion
 	if(sdInit){
 		hasSD=sd.begin();
@@ -568,7 +609,6 @@ void detectAttachedSensors(){
 	}
 }
 
-//also updates the global var logString according to global date/time & the temp readings
 // does nothing if there are no sensors
 void readSensors(){
 	if(sensorsFound){
@@ -637,7 +677,8 @@ void buildLogString(){
 	//build the log data string
 	char sT[6];
 	//date, time and output status
-	sprintf(logString,"%s,%s,%1d,%1d",date,time,outA,outB);
+	sprintf(logString,"%s,%s,%1d,%1d,%02x",date,time,outA,outB, status);
+	status=0;//reset status flag now it is logged
 	//accumulate the temperatures
 	for(uint8_t i=0; i<numStoredSensorIds;i++){
 		stringT(T[i],sT);
@@ -887,6 +928,7 @@ void doSerialCommands(){
 				break;
 				
 				case CMD_SCAN:
+				EEPROMUtils::clearBlock(EEPROM_1WIRE_BASE, MAX_1WIRE_SENSORS*8);
 				detectAttachedSensors();
 				break;
 				
