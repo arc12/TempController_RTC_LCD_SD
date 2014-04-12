@@ -221,7 +221,7 @@ void setup(){
 	
 	// set up the SD card switch as an interrupt. Pin2 is interrupt 0. Only trigger on edge
 	pinMode(sdSwitch,INPUT_PULLUP);
-	attachInterrupt(0, sdConnect, FALLING);
+	attachInterrupt(0, sdConnect, CHANGE);//FALLING
 	
 	//is LCD connected. If LCD not used then a pull-down on LCD E should be inserted instead (if it is desired for the software to skip LCD code chunks)
 	pinMode(lcdE, INPUT_PULLUP);
@@ -324,6 +324,11 @@ void loop(){
 		//save any changed parameters to EEPROM when leaving set mode
 		if(runMode){
 			saveParamsToEEPROM();
+			//turn off outB (setup mode warning)
+			digitalWrite(outBPin, LOW);
+		}else{			
+			//turn off outB (setup mode warning)
+			digitalWrite(outBPin, HIGH);
 		}
 		
 		//Show change of run mode on LCD
@@ -392,17 +397,18 @@ void loop(){
 				lcd.print(strTc);
 				lcd.print(outA?" ON ":" OFF");
 				lcd.setCursor(0, 1);//row=1 col=0
-				lcd.print("Status:");
+				lcd.print("Status: waiting");
+				lcd.setCursor(8, 1);
 				if(needLog && hasSD){
-					lcd.print(" log");
+					lcd.print("log    ");
 				}
 				if(needControl){
-					lcd.print(" ctrl");
+					lcd.print("ctrl   ");
 				}
-				if(!(needControl || needLog)){
-					lcd.print(" waiting");
-				}
-				lcd.print("     ");//clears any previous chars
+				//if(!(needControl || needLog)){
+					//lcd.print("waiting");
+				//}
+				//lcd.print("     ");//clears any previous chars
 			}
 			}else{
 			if(  lcdPresent){
@@ -449,9 +455,11 @@ void loop(){
 /* ===================================
 *       Misc Functions
 * ====================================*/
-//ISR - set a flag for use in loop()
+//ISR - set a flag for use in loop(), also disable SD writing.
+// Writing will be promptly re-enabled only if this was an insertion
 void sdConnect(){
 	sdInit = (digitalRead(sdSwitch)==LOW);
+	hasSD = false;
 }
 
 /* ====================================
