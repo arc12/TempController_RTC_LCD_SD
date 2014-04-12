@@ -8755,17 +8755,17 @@ grid 5 mm, outline 2.4 x 4.4 mm</description>
 <wire x1="-0.52" y1="12.1" x2="-0.02" y2="12.7" width="0" layer="46" curve="-90"/>
 <wire x1="-0.17" y1="7.51" x2="-0.17" y2="5.64" width="0.2032" layer="21"/>
 <wire x1="9.93" y1="5.64" x2="9.93" y2="13.7" width="0.2032" layer="21"/>
-<pad name="OUTER-GND" x="4.88" y="14" drill="1" diameter="2.54" shape="long"/>
-<pad name="CONTACT" x="4.88" y="8" drill="1" diameter="2.54" shape="long"/>
-<pad name="CENTRE-POS" x="-0.02" y="11" drill="1" diameter="2.54" shape="long" rot="R90"/>
-<text x="9.16" y="7.35" size="1.016" layer="25" rot="R90">&gt;NAME</text>
-<text x="-2" y="5.27" size="1.016" layer="27" rot="R90">&gt;VALUE</text>
+<pad name="POS" x="4.88" y="14" drill="1" diameter="2.54" shape="long"/>
+<pad name="GND" x="4.88" y="8" drill="1" diameter="2.54" shape="long"/>
+<pad name="GND2" x="-0.02" y="11" drill="1" diameter="2.54" shape="long" rot="R90"/>
+<text x="7.255" y="11.065" size="1.016" layer="25" rot="R180">&gt;NAME</text>
+<text x="11.335" y="7.175" size="1.016" layer="27" rot="R90">&gt;VALUE</text>
 <wire x1="7" y1="15" x2="9.5" y2="15" width="0.203" layer="21"/>
 <wire x1="9.5" y1="15" x2="9.5" y2="14" width="0.203" layer="21"/>
 <wire x1="3" y1="15" x2="0.4" y2="15" width="0.203" layer="21"/>
 <wire x1="0.4" y1="15" x2="0.4" y2="14" width="0.203" layer="21"/>
-<text x="-3" y="12" size="1.9304" layer="21">+</text>
-<text x="6.8" y="12.4" size="1.27" layer="21" rot="R180">GND</text>
+<text x="5.89" y="15.175" size="1.9304" layer="21">+</text>
+<text x="7.92" y="9.34" size="1.27" layer="21" rot="R270">GND</text>
 <rectangle x1="0" y1="0.635" x2="10.16" y2="15.24" layer="39"/>
 </package>
 <package name="POWER_JACK_PTH">
@@ -15853,11 +15853,11 @@ Mating wall wart : TOL-00298 (and others)</description>
 </technology>
 </technologies>
 </device>
-<device name="SLT" package="POWER_JACK_SLOT2">
+<device name="**MJ-179PH" package="POWER_JACK_SLOT2">
 <connects>
-<connect gate="G$1" pin="GND" pad="OUTER-GND"/>
-<connect gate="G$1" pin="GNDBREAK" pad="CONTACT"/>
-<connect gate="G$1" pin="PWR" pad="CENTRE-POS"/>
+<connect gate="G$1" pin="GND" pad="GND"/>
+<connect gate="G$1" pin="GNDBREAK" pad="GND2"/>
+<connect gate="G$1" pin="PWR" pad="POS"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -20119,7 +20119,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="LOGO1" library="Astronomical Clocks" deviceset="OSHW-LOGO" device="S"/>
 <part name="JP2" library="Astronomical Clocks" deviceset="AVR-ISP-6" device="VERT" value="AVR-ISP"/>
 <part name="C3" library="Astronomical Clocks" deviceset="C-EU" device="025-024X044**100NF+22PF" value="100n"/>
-<part name="C4" library="Astronomical Clocks" deviceset="CPOL-EU" device="E2.5-5" value="10u"/>
+<part name="C4" library="Astronomical Clocks" deviceset="CPOL-EU" device="E2.5-5" value="100u"/>
 <part name="X2" library="Astronomical Clocks" deviceset="CRYSTAL*" device="-HC49U-V**16MHZ" value="16MHz"/>
 <part name="C5" library="Astronomical Clocks" deviceset="C-EU" device="025-024X044**100NF+22PF" value="22p"/>
 <part name="C6" library="Astronomical Clocks" deviceset="C-EU" device="025-024X044**100NF+22PF" value="22p"/>
@@ -20136,7 +20136,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="SUPPLY6" library="Astronomical Clocks" deviceset="VCC" device=""/>
 <part name="LDO1" library="Astronomical Clocks" deviceset="XC6204/5" device="" value="XC6204B 3V3"/>
 <part name="D2" library="Astronomical Clocks" deviceset="DIODE-SCHOTTKY" device="DO-41" value="SR150"/>
-<part name="J1" library="Astronomical Clocks" deviceset="POWER_JACK" device="SLT" value="PWR IN"/>
+<part name="J1" library="Astronomical Clocks" deviceset="POWER_JACK" device="**MJ-179PH" value="PWR IN"/>
 <part name="SJ1" library="Astronomical Clocks" deviceset="SOLDERJUMPER" device="NO" value="Bypass LDOs"/>
 <part name="U$2" library="Logging Controller" deviceset="MICROSD-HRS_DM3D" device=""/>
 <part name="U2" library="Logging Controller" deviceset="LCD-16X2" device="NOSILK" value="LCD-1602 3V3"/>
@@ -20174,12 +20174,12 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <sheets>
 <sheet>
 <plain>
-<text x="-22.86" y="78.74" size="3.81" layer="97">Adam Cooper, March 2014</text>
-<text x="-22.86" y="86.36" size="3.81" layer="97">Logging Controller (RTC LCD SD)
-Version 1</text>
+<text x="-25.4" y="73.66" size="3.81" layer="97">Adam Cooper, March 2014</text>
+<text x="-25.4" y="81.28" size="3.81" layer="97">Logging Controller (RTC LCD SD)
+Version 1.0.1</text>
 <text x="148.59" y="172.72" size="1.778" layer="97" rot="R90">Open=Run
 Closed=Set</text>
-<text x="19.05" y="195.58" size="1.778" layer="97">* - optional resistors
+<text x="52.07" y="213.36" size="1.778" layer="97">* - optional resistors
 omit if ATMega internal
 pull-ups enabled in code.
 This apples to SDA/SCL
@@ -20190,7 +20190,7 @@ more I2C devices or when
 using 400kHz rate)</text>
 <text x="-25.4" y="134.62" size="1.778" layer="97">6V Max
 if MCP1700</text>
-<text x="-12.7" y="182.88" size="1.778" layer="97">** - optional for
+<text x="49.022" y="136.144" size="1.27" layer="97">** - optional for
 noise resistance</text>
 <text x="63.5" y="139.7" size="1.778" layer="97">**</text>
 <text x="116.84" y="194.818" size="1.778" layer="97">*</text>
@@ -20202,20 +20202,32 @@ FTDI capability, power is not taken
 from it.The controller must be
 separately powered during
 programming.</text>
-<text x="10.16" y="172.72" size="1.778" layer="97" rot="R180">CHOOSE ONE
-V-REG</text>
+<text x="25.654" y="189.738" size="1.27" layer="97" rot="R180">CHOOSE ONE V-REG!
+MCP1700 with C4=10u gives lousy timekeeping
+on breadboard with a wall wart and caused
+hangs before WDT was used.
+XC6204 with C4=10u will not startup without a
+large cap on input (which can be removed after
+startup). Keeps good time on breadboard.
+XC6204 with C4=100u WILL startup fine and
+keeps good time.</text>
 <text x="208.28" y="157.48" size="1.778" layer="97" rot="R90">If LCD is not connected,
 run a 22k pull-down on E.
 (used to sense presence
 of LCD in software)</text>
 <text x="100.33" y="222.25" size="1.778" layer="97">CHOOSE: Serial Program 
 or Bluetooth</text>
+<text x="-25.4" y="223.52" size="1.778" layer="97">Revisions:
+1.0.1 - corrected footprint for PWR IN,
+            uprated C4 to 100u,
+            added SJ2 a/b on board,
+            annotated SV1 pins on board</text>
 </plain>
 <instances>
 <instance part="BAT1" gate="G$1" x="34.29" y="185.42" rot="R270"/>
 <instance part="U1" gate="G$1" x="88.9" y="132.08"/>
 <instance part="GND2" gate="1" x="152.4" y="73.66"/>
-<instance part="GND3" gate="1" x="60.96" y="80.01"/>
+<instance part="GND3" gate="1" x="60.96" y="95.25"/>
 <instance part="GND4" gate="1" x="29.21" y="179.07"/>
 <instance part="GND5" gate="1" x="156.21" y="194.31"/>
 <instance part="U$1" gate="G$1" x="88.9" y="187.96" smashed="yes">
@@ -20242,7 +20254,7 @@ or Bluetooth</text>
 <attribute name="NAME" x="114.0714" y="195.58" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="113.792" y="200.66" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="LOGO1" gate="G$1" x="-5.08" y="208.28"/>
+<instance part="LOGO1" gate="G$1" x="-10.16" y="106.68"/>
 <instance part="JP2" gate="G$1" x="123.19" y="78.74" smashed="yes">
 <attribute name="NAME" x="111.76" y="71.12" size="1.778" layer="95" ratio="10"/>
 </instance>
@@ -20255,7 +20267,10 @@ or Bluetooth</text>
 <attribute name="VALUE" x="40.1574" y="109.093" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="X2" gate="X" x="59.69" y="127" rot="R90"/>
-<instance part="C5" gate="G$1" x="52.07" y="132.08" rot="R90"/>
+<instance part="C5" gate="G$1" x="52.07" y="132.08" smashed="yes" rot="R90">
+<attribute name="NAME" x="51.816" y="134.747" size="1.778" layer="95" rot="R180"/>
+<attribute name="VALUE" x="59.69" y="134.747" size="1.778" layer="96" rot="R180"/>
+</instance>
 <instance part="C6" gate="G$1" x="52.07" y="119.38" smashed="yes" rot="R90">
 <attribute name="NAME" x="51.689" y="114.554" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="56.769" y="114.554" size="1.778" layer="96" rot="R90"/>
@@ -20622,7 +20637,7 @@ or Bluetooth</text>
 <wire x1="60.96" y1="101.6" x2="66.04" y2="101.6" width="0.1524" layer="91"/>
 <wire x1="66.04" y1="101.6" x2="66.04" y2="104.14" width="0.1524" layer="91"/>
 <pinref part="GND3" gate="1" pin="GND"/>
-<wire x1="60.96" y1="101.6" x2="60.96" y2="82.55" width="0.1524" layer="91"/>
+<wire x1="60.96" y1="101.6" x2="60.96" y2="97.79" width="0.1524" layer="91"/>
 <wire x1="0" y1="114.3" x2="0" y2="124.46" width="0.1524" layer="91"/>
 <pinref part="C4" gate="G$1" pin="-"/>
 <wire x1="38.1" y1="111.76" x2="38.1" y2="101.6" width="0.1524" layer="91"/>
