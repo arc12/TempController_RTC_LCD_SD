@@ -68,7 +68,8 @@ void readRTC();
 void doSerialCommands();
 int encodeCommand(char cmd[5]);
 void buildLogString();
-void sdConnect();
+void sdISR();
+void spiFloat();
 
 /* Below this point, should be what you need for an Arduino IDE sketch (+ the necessary library includes) */
 
@@ -119,7 +120,7 @@ const int sensorPin = 5;   //a 4.7k pull-up resistor is necessary
 #define CMD_SETT 4 //set time using HH:MM:SS string
 #define CMD_LOGN 5 //change name of log file. Must be no longer than 8.3 and must be at least 1.3 (e.g. a.csv)
 #define CMD_LOGI 6 //change logging interval in seconds. this is determined by arduino function millis() not the RTC. An integer
-#define CMD_TEMP 7//read all attached temp sensors and emit logging string. Forces a check of the control conditions and change of output
+#define CMD_TEMP 7//read all attached temp sensors and emit logging string.
 #define CMD_TMIN 8//change low temperature threshold for controller. output turns on if T less than this value. May be a float. Maybe negative
 #define CMD_THYS 9//change temperature hysteresis. output turns off if T >= TMIN+THYS. May be a float
 #define CMD_OUTI 10 //change interval in seconds between controller deciding whether to switch on or off (according to TMIN and THYS). An integer
@@ -221,7 +222,7 @@ void setup(){
 	
 	// set up the SD card switch as an interrupt. Pin2 is interrupt 0. Only trigger on edge
 	pinMode(sdSwitch,INPUT_PULLUP);
-	attachInterrupt(0, sdConnect, CHANGE);//FALLING
+	attachInterrupt(0, sdISR, CHANGE);//was FALLING
 	
 	//is LCD connected. If LCD not used then a pull-down on LCD E should be inserted instead (if it is desired for the software to skip LCD code chunks)
 	pinMode(lcdE, INPUT_PULLUP);
@@ -249,6 +250,7 @@ void setup(){
 	hasSD=sd.begin();//was SD.begin(10)
 	if(!hasSD){
 		Serial.println("No SD card");
+		spiFloat();
 		//alt sd.initErrorPrint()
 	}
 	
@@ -312,6 +314,7 @@ void loop(){
 			lcd.print("SD Card Error");
 			delay(1000);
 			lcd.clear();
+			spiFloat();
 		}
 		sdInit=false;
 	}
@@ -398,17 +401,12 @@ void loop(){
 				lcd.print(outA?" ON ":" OFF");
 				lcd.setCursor(0, 1);//row=1 col=0
 				lcd.print("Status: waiting");
-				lcd.setCursor(8, 1);
-				if(needLog && hasSD){
-					lcd.print("log    ");
-				}
+				lcd.setCursor(8, 1);				
 				if(needControl){
 					lcd.print("ctrl   ");
+				}else if(needLog && hasSD){
+					lcd.print("log    ");
 				}
-				//if(!(needControl || needLog)){
-					//lcd.print("waiting");
-				//}
-				//lcd.print("     ");//clears any previous chars
 			}
 			}else{
 			if(  lcdPresent){
@@ -433,6 +431,7 @@ void loop(){
 		
 		//update LCD for set mode
 		if(  lcdPresent){
+			readRTC();//keep the time up-dated during setup mode
 			char strTmin[6], strThys[5];
 			stringT(Tmin, strTmin);
 			int iT = (int)Thys;
@@ -455,11 +454,21 @@ void loop(){
 /* ===================================
 *       Misc Functions
 * ====================================*/
-//ISR - set a flag for use in loop(), also disable SD writing.
+//ISR - set a flag for use in loop() to show SD card insertion/removal, also disable SD writing.
 // Writing will be promptly re-enabled only if this was an insertion
-void sdConnect(){
+void sdISR(){
 	sdInit = (digitalRead(sdSwitch)==LOW);
 	hasSD = false;
+	spiFloat();
+}
+
+//make sure the SPI bus is in a sensible floating state.
+//this is used if a sd.begin() fails or card removal is detected.
+void spiFloat(){
+	digitalWrite(10, HIGH); // Slave select is active low
+	pinMode(11, INPUT); //MOSI
+	pinMode(12, INPUT); //MISO (should already be input)
+	pinMode(13, INPUT); //SCK
 }
 
 /* ====================================
@@ -859,7 +868,7 @@ void doSerialCommands(){
 				case CMD_TEMP:
 				readRTC();
 				readSensors();
-				controlOutputs();
+				//controlOutputs();
 				buildLogString();
 				Serial.println(logString);
 				break;
